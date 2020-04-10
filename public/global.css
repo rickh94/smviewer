@@ -1,0 +1,48 @@
+html {
+	position: relative;
+	width: 100%;
+	height: 100%;
+  margin: 0;
+	padding: 0;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+.nav-button {
+	border: none;
+	display: inline-flex;
+	vertical-align: middle;
+	background: transparent;
+	cursor: pointer;
+	height: 100%;
+	width: auto;
+}
+
+.button-text {
+	height: 100%;
+	margin: auto 0;
+	padding: 0;
+	display: inline-block;
+	line-height: 1;
+}
+
+.subtle-button {
+	border: none;
+	display: block;
+	padding: 8px;
+	background: #eee;
+	cursor: pointer
+}
+
+.shadow-md {
+	box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
