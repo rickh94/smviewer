@@ -1,66 +1,50 @@
 <script>
-import { createEventDispatcher, onMount } from 'svelte';
-import opensheetmusicdisplay from 'opensheetmusicdisplay';
-import { writable } from 'svelte/store';
+  import Loader from "./Loader.svelte";
+  import { createEventDispatcher, onMount, afterUpdate } from "svelte";
+  import opensheetmusicdisplay from "opensheetmusicdisplay";
+  import { writable } from "svelte/store";
 
-let title = 'The Title';
-export let sheetUrl;
-let showMenu = true;
-let compact = true;
-let osmd;
+  let title = "The Title";
+  export let sheetUrl;
+  let showMenu = true;
+  let compact = true;
+  let osmd;
+  let loading = true;
 
-const dispatch = createEventDispatcher();
+  const dispatch = createEventDispatcher();
 
-onMount(async () => {
-  compact = JSON.parse(localStorage.getItem('compact')) || false;
-  osmd = new opensheetmusicdisplay.OpenSheetMusicDisplay('sheet-viewer', {
-    drawingParameters: compact ? 'compact' : 'normal',
-    drawPartNames: false,
+  onMount(async () => {
+    compact = JSON.parse(localStorage.getItem("compact")) || false;
+    osmd = new opensheetmusicdisplay.OpenSheetMusicDisplay("sheet-viewer", {
+      drawingParameters: compact ? "compact" : "normal",
+      drawPartNames: false,
+      autoResize: false
+    });
+    window.onresize = () => {
+      alert("Refresh the page to fit the music to your screen.");
+    }
   });
-  await osmd.load(sheetUrl);
-  osmd.render();
-});
 
-function onViewModeChange(e) {
-  if (e.target.checked) {
-    localStorage.setItem('compact', JSON.stringify(true));
-    osmd.setOptions({ drawingParameters: 'compact' });
-  } else {
-    localStorage.setItem('compact', JSON.stringify(false));
-    osmd.setOptions({ drawingParameters: 'normal' });
+  $: {
+    if (osmd) {
+      loading = true;
+      osmd
+        .load(sheetUrl)
+        .then(() => {
+          osmd.render();
+          loading = false;
+        })
+        .catch(err => alert(err));
+    }
   }
-  osmd.render();
-}
 
+  function onViewModeChange() {
+    compact = !compact;
+    localStorage.setItem("compact", JSON.stringify(compact));
+    osmd.setOptions({ drawingParameters: compact ? "compact" : "normal" });
+    osmd.render();
+  }
 </script>
-
-
-<main>
-    {#if showMenu}
-      <nav class="menu shadow-md">
-        <button class="nav-button" on:click={() => showMenu = false}>
-          <i class="material-icons ">close</i>
-          <span class="button-text ">
-          Close Menu
-          </span>
-        </button>
-        <label for="compact" class="checkbox-label">
-          Compact
-          <input type="checkbox" name="compact" id="compact" on:change={onViewModeChange} bind:checked={compact}>
-        </label>
-        <button class="nav-button" on:click={() => dispatch('showLibrary')}>
-          <span class="button-text pl-1">
-          Show Library&nbsp;
-          </span>
-          <i class="material-icons">library_music</i>
-        </button>
-      </nav>
-    {:else}
-      <button class="subtle-button" title="Show Menu" on:click={() => showMenu = true}>
-        <i class="material-icons">menu</i></button>
-    {/if}
-  <div id="sheet-viewer"></div>
-</main>
 
 <style>
   .menu {
@@ -69,6 +53,10 @@ function onViewModeChange(e) {
     padding: 0.5rem 2rem;
     z-index: 500;
     background: #eee;
+  }
+
+  .border {
+    border: 1px solid #555555;
   }
 
   .checkbox-label {
@@ -82,6 +70,48 @@ function onViewModeChange(e) {
     left: 0;
     z-index: -1;
   }
+
+  .loader-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding-top: 2rem;
+    padding-bottom: 10rem;
+    background: #fff;
+  }
+
 </style>
 
-
+<main>
+  {#if showMenu}
+    <nav class="menu shadow-md">
+      <button class="nav-button" on:click={() => (showMenu = false)}>
+        <i class="material-icons ">close</i>
+        <span class="button-text ">Close Menu</span>
+      </button>
+      <button
+        class="nav-button border"
+        class:active={compact}
+        on:click={onViewModeChange}>
+        {compact ? 'Compact view on' : 'Compact view off'}
+      </button>
+      <button class="nav-button" on:click={() => dispatch('showLibrary')}>
+        <span class="button-text pl-1">Show Library&nbsp;</span>
+        <i class="material-icons">library_music</i>
+      </button>
+    </nav>
+  {:else}
+    <button
+      class="subtle-button shadow"
+      title="Show Menu"
+      on:click={() => (showMenu = true)}>
+      <i class="material-icons">menu</i>
+    </button>
+  {/if}
+  {#if loading}
+    <div class="loader-wrapper">
+      <Loader />
+    </div>
+  {/if}
+  <div id="sheet-viewer" />
+</main>
