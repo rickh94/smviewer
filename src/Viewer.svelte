@@ -22,7 +22,7 @@
     });
     window.onresize = () => {
       alert("Refresh the page to fit the music to your screen.");
-    }
+    };
   });
 
   $: {
@@ -59,11 +59,6 @@
     border: 1px solid #555555;
   }
 
-  .checkbox-label {
-    display: flex;
-    align-items: center;
-  }
-
   #sheet-viewer {
     position: absolute;
     top: 0;
@@ -79,7 +74,6 @@
     padding-bottom: 10rem;
     background: #fff;
   }
-
 </style>
 
 <main>
@@ -92,7 +86,8 @@
       <button
         class="nav-button border"
         class:active={compact}
-        on:click={onViewModeChange}>
+        on:click={onViewModeChange}
+        title={compact ? 'Switch compact view off' : 'Switch compact view on'}>
         {compact ? 'Compact view on' : 'Compact view off'}
       </button>
       <button class="nav-button" on:click={() => dispatch('showLibrary')}>
