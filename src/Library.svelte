@@ -12,6 +12,7 @@
   let addMenuOpen = false;
   let showAddDialog = false;
   let addMenuEl;
+  let sheetForDeletion = null;
 
   onMount(() => {
     library = JSON.parse(localStorage.getItem("library")) || {
@@ -59,6 +60,22 @@
     localStorage.setItem("library", JSON.stringify(library));
     console.log(library.sheets);
     showAddDialog = false;
+  }
+  
+  function handleDeleteSheet({detail: sheet}) {
+    // alert(`delete called for ${sheet.id} ${sheet.title}`);
+    sheetForDeletion = sheet;
+  }
+
+  function handleEditSheet({detail: sheet}) {
+    alert(`edit called for ${sheet.id} ${sheet.title}`);
+  }
+
+  function deleteSheet() {
+    const nextSheets = library.sheets.filter(sheet => sheet.id !== sheetForDeletion.id);
+    library.sheets = nextSheets;
+    localStorage.setItem("library", JSON.stringify(library));
+    sheetForDeletion = null;
   }
 </script>
 
@@ -162,11 +179,17 @@
       on:addsheet={handleAddSheet}
       on:cancel={() => (showAddDialog = false)} />
   </div>
+  {:else if sheetForDeletion}
+  <div class="delete-wrapper">
+  <h6>Are you sure you want to delete {sheetForDeletion.title}?</h6>
+  <button on:click={deleteSheet}>Delete</button>
+  <button on:click={() => sheetForDeletion = null}>Cancel</button>
+  </div>
 {:else}
   <div class="library">
     {#each library.sheets as sheet (sheet.id)}
       <div class="grid-item shadow">
-        <LibraryItem {sheet} on:opensheet />
+        <LibraryItem {sheet} on:opensheet on:deletesheet={handleDeleteSheet} on:editsheet={handleEditSheet} />
       </div>
     {:else}
       <div class="grid-item">

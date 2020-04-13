@@ -44,6 +44,17 @@
       closeMenu();
     }
   }
+
+  function onDeleteSheet() {
+    closeMenu();
+    dispatch("deletesheet", sheet);
+  }
+
+  function onEditSheet() {
+    closeMenu();
+    dispatch("editsheet", sheet);
+  }
+
 </script>
 
 <style>
@@ -169,13 +180,11 @@
           class="dropdown-content shadow-md"
           bind:this={menuElement}
           transition:slide={{ duration: 200, easing: cubicInOut }}>
-          <button>
-            <span>
+          <button on:click={onDeleteSheet}>
               <i class="material-icons icon-sm">delete</i>
               Delete
-            </span>
           </button>
-          <button>
+          <button on:click={onEditSheet}>
             <i class="material-icons icon-sm">edit</i>
             Edit
           </button>

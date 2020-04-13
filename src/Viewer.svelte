@@ -20,9 +20,6 @@
       drawPartNames: false,
       autoResize: false
     });
-    window.onresize = () => {
-      alert("Refresh the page to fit the music to your screen.");
-    };
   });
 
   $: {
