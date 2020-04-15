@@ -1,66 +1,88 @@
 html {
-	position: relative;
-	width: 100%;
-	height: 100%;
+  position: relative;
+  width: 100%;
+  height: 100%;
   margin: 0;
-	padding: 0;
+  padding: 0;
 }
 
 body {
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
-	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 }
 
 * {
-	box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 .nav-button {
-	border: none;
-	display: inline-flex;
-	vertical-align: middle;
-	background: transparent;
-	cursor: pointer;
-	height: 100%;
-	width: auto;
-	padding: 0.5rem;
-	margin: 0;
+  border: none;
+  display: inline-flex;
+  vertical-align: middle;
+  background: transparent;
+  cursor: pointer;
+  height: 100%;
+  width: auto;
+  padding: 0.5rem;
+  margin: 0;
 }
 
 .button-text {
-	height: 100%;
-	margin: auto 0;
-	padding: 0;
-	display: inline-block;
-	line-height: 1;
+  height: 100%;
+  margin: auto 0;
+  padding: 0;
+  display: inline-block;
+  line-height: 1;
 }
 
 .subtle-button {
-	border: none;
-	display: block;
-	padding: 6px 8px 4px 8px;
-	background: #eee;
-	cursor: pointer
+  border: none;
+  display: block;
+  padding: 6px 8px 4px 8px;
+  background: #eee;
+  cursor: pointer;
 }
 
 .shadow-md {
-	box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 .shadow-sm {
-	box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
 .shadow,
 .focus\:shadow:focus,
 .hover\:shadow:hover {
-	box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
 }
 
-
 .active {
-	background-color: #555;
-	color: white;
+  background-color: #555;
+  color: white;
+}
+
+.dialog-buttons {
+  margin-top: 0.5rem;
+  width: 100%;
+  max-width: 20rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 0.5rem;
+}
+
+.dialog-buttons button {
+  border: 1px solid #333;
+  padding: 0.25rem 0.5rem;
+  background: #fff;
+  cursor: pointer;
+}
+
+.dialog-buttons button:hover {
+  color: white;
+  background: #333;
 }

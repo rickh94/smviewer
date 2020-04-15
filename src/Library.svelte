@@ -15,6 +15,7 @@
   let sheetForDeletion = null;
 
   onMount(() => {
+    // console.log(new URL(window.location).searchParams.get("add"));
     library = JSON.parse(localStorage.getItem("library")) || {
       sheets: []
     };
@@ -61,18 +62,20 @@
     console.log(library.sheets);
     showAddDialog = false;
   }
-  
-  function handleDeleteSheet({detail: sheet}) {
+
+  function handleDeleteSheet({ detail: sheet }) {
     // alert(`delete called for ${sheet.id} ${sheet.title}`);
     sheetForDeletion = sheet;
   }
 
-  function handleEditSheet({detail: sheet}) {
+  function handleEditSheet({ detail: sheet }) {
     alert(`edit called for ${sheet.id} ${sheet.title}`);
   }
 
   function deleteSheet() {
-    const nextSheets = library.sheets.filter(sheet => sheet.id !== sheetForDeletion.id);
+    const nextSheets = library.sheets.filter(
+      sheet => sheet.id !== sheetForDeletion.id
+    );
     library.sheets = nextSheets;
     localStorage.setItem("library", JSON.stringify(library));
     sheetForDeletion = null;
@@ -84,7 +87,11 @@
     text-align: center;
   }
 
-  .add-wrapper {
+  h4 {
+    margin: 0 0 0.5rem 0;
+  }
+
+  .dialog-wrapper {
     margin: 0 2rem 2rem 1.5rem;
   }
 
@@ -144,6 +151,10 @@
     min-width: 160px;
     outline: none;
   }
+
+  .dialog-text {
+    margin-bottom: 1rem;
+  }
 </style>
 
 <nav class="menu">
@@ -174,22 +185,29 @@
   </button>
 </nav>
 {#if showAddDialog}
-  <div class="add-wrapper">
+  <div class="dialog-wrapper">
     <AddDialog
       on:addsheet={handleAddSheet}
       on:cancel={() => (showAddDialog = false)} />
   </div>
-  {:else if sheetForDeletion}
-  <div class="delete-wrapper">
-  <h6>Are you sure you want to delete {sheetForDeletion.title}?</h6>
-  <button on:click={deleteSheet}>Delete</button>
-  <button on:click={() => sheetForDeletion = null}>Cancel</button>
+{:else if sheetForDeletion}
+  <div class="dialog-wrapper">
+    <h4>Confirm Deletion</h4>
+    <p class="dialog-text">Are you sure you want to delete {sheetForDeletion.title}?</p>
+    <div class="dialog-buttons">
+      <button on:click={deleteSheet}>Delete</button>
+      <button on:click={() => (sheetForDeletion = null)}>Cancel</button>
+    </div>
   </div>
 {:else}
   <div class="library">
     {#each library.sheets as sheet (sheet.id)}
       <div class="grid-item shadow">
-        <LibraryItem {sheet} on:opensheet on:deletesheet={handleDeleteSheet} on:editsheet={handleEditSheet} />
+        <LibraryItem
+          {sheet}
+          on:opensheet
+          on:deletesheet={handleDeleteSheet}
+          on:editsheet={handleEditSheet} />
       </div>
     {:else}
       <div class="grid-item">

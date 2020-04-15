@@ -67,26 +67,6 @@
     border-color: #fe0505;
   }
 
-  .buttons {
-    margin-top: 0.5rem;
-    width: 100%;
-    max-width: 20rem;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 0.5rem;
-  }
-
-  button {
-    border: 1px solid #333;
-    padding: 0.25rem 0.5rem;
-    background: #fff;
-    cursor: pointer;
-  }
-
-  button:hover {
-    color: white;
-    background: #333;
-  }
 </style>
 
 <h4>Add a New Piece</h4>
@@ -105,7 +85,7 @@
   id="previewURL"
   class="focus:shadow"
   bind:value={previewURL} />
-<div class="buttons">
+<div class="dialog-buttons">
   <button type="submit" class="hover:shadow" on:click={addSheet}>Save</button>
   <button class="hover:shadow" on:click={() => dispatch('cancel')}>
     Cancel
