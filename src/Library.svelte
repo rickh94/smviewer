@@ -16,11 +16,34 @@
   let sheetForEditing = null;
 
   onMount(() => {
-    // console.log(new URL(window.location).searchParams.get("add"));
     library = JSON.parse(localStorage.getItem("library")) || {
       sheets: []
     };
+    const search = new URL(window.location).searchParams;
+    if (search.get("add") === "true") {
+      addFromURL(search);
+    }
   });
+
+  function addFromURL(search) {
+    const id = Math.random()
+      .toString(36)
+      .substr(2, 9);
+    const title = search.get("title");
+    const musicURL = search.get("musicURL");
+    if (!title || !musicURL || !musicURL.includes("http")) {
+      alert("This link is invalid!");
+      return;
+    }
+    const previewURL = search.get("previewURL");
+    const composer = search.get("composer");
+    const newSheet = { id, title, musicURL, previewURL, composer };
+    if (confirm(`Would you like to add ${newSheet.title} to your library?`)) {
+      library.sheets.push(newSheet);
+      localStorage.setItem("library", JSON.stringify(library));
+    }
+    window.location.href = "/";
+  }
 
   function toggleAddMenu() {
     if (addMenuOpen) {
@@ -73,13 +96,14 @@
     sheetForDeletion = null;
   }
 
-  function updateSheet({detail: nextSheet}) {
-    const sheetIdx = library.sheets.findIndex(currentSheet => currentSheet.id === nextSheet.id);
+  function updateSheet({ detail: nextSheet }) {
+    const sheetIdx = library.sheets.findIndex(
+      currentSheet => currentSheet.id === nextSheet.id
+    );
     library.sheets[sheetIdx] = nextSheet;
-    localStorage.setItem('library', JSON.stringify(library));
+    localStorage.setItem("library", JSON.stringify(library));
     sheetForEditing = null;
   }
-
 </script>
 
 <style>
