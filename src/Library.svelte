@@ -3,7 +3,7 @@
   import { slide } from "svelte/transition";
   import { cubicInOut } from "svelte/easing";
   import LibraryItem from "./LibraryItem.svelte";
-  import AddDialog from "./AddDialog.svelte";
+  import EditDialog from "./EditDialog.svelte";
 
   const dispatch = createEventDispatcher();
   let library = {
@@ -13,6 +13,7 @@
   let showAddDialog = false;
   let addMenuEl;
   let sheetForDeletion = null;
+  let sheetForEditing = null;
 
   onMount(() => {
     // console.log(new URL(window.location).searchParams.get("add"));
@@ -63,15 +64,6 @@
     showAddDialog = false;
   }
 
-  function handleDeleteSheet({ detail: sheet }) {
-    // alert(`delete called for ${sheet.id} ${sheet.title}`);
-    sheetForDeletion = sheet;
-  }
-
-  function handleEditSheet({ detail: sheet }) {
-    alert(`edit called for ${sheet.id} ${sheet.title}`);
-  }
-
   function deleteSheet() {
     const nextSheets = library.sheets.filter(
       sheet => sheet.id !== sheetForDeletion.id
@@ -80,6 +72,14 @@
     localStorage.setItem("library", JSON.stringify(library));
     sheetForDeletion = null;
   }
+
+  function updateSheet({detail: nextSheet}) {
+    const sheetIdx = library.sheets.findIndex(currentSheet => currentSheet.id === nextSheet.id);
+    library.sheets[sheetIdx] = nextSheet;
+    localStorage.setItem('library', JSON.stringify(library));
+    sheetForEditing = null;
+  }
+
 </script>
 
 <style>
@@ -186,18 +186,27 @@
 </nav>
 {#if showAddDialog}
   <div class="dialog-wrapper">
-    <AddDialog
-      on:addsheet={handleAddSheet}
+    <EditDialog
+      on:savesheet={handleAddSheet}
       on:cancel={() => (showAddDialog = false)} />
   </div>
-{:else if sheetForDeletion}
+{:else if sheetForDeletion !== null}
   <div class="dialog-wrapper">
     <h4>Confirm Deletion</h4>
-    <p class="dialog-text">Are you sure you want to delete {sheetForDeletion.title}?</p>
+    <p class="dialog-text">
+      Are you sure you want to delete {sheetForDeletion.title}?
+    </p>
     <div class="dialog-buttons">
       <button on:click={deleteSheet}>Delete</button>
       <button on:click={() => (sheetForDeletion = null)}>Cancel</button>
     </div>
+  </div>
+{:else if sheetForEditing !== null}
+  <div class="dialog-wrapper">
+    <EditDialog
+      {...sheetForEditing}
+      on:savesheet={updateSheet}
+      on:cancel={() => (sheetForEditing = null)} />
   </div>
 {:else}
   <div class="library">
@@ -206,8 +215,8 @@
         <LibraryItem
           {sheet}
           on:opensheet
-          on:deletesheet={handleDeleteSheet}
-          on:editsheet={handleEditSheet} />
+          on:deletesheet={({ detail: sheet }) => (sheetForDeletion = sheet)}
+          on:editsheet={({ detail: sheet }) => (sheetForEditing = sheet)} />
       </div>
     {:else}
       <div class="grid-item">

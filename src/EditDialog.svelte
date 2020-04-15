@@ -1,9 +1,10 @@
 <script>
   import { createEventDispatcher } from "svelte";
-  let title = "";
-  let composer = "";
-  let musicURL = "";
-  let previewURL = "";
+  export let id = null;
+  export let title = "";
+  export let composer = "";
+  export let musicURL = "";
+  export let previewURL = "";
   let error = "";
 
   $: titleError = error.includes("Title");
@@ -11,7 +12,7 @@
 
   const dispatch = createEventDispatcher();
 
-  function addSheet() {
+  function saveSheet() {
     if (!title) {
       error = "Title is required";
       return;
@@ -24,11 +25,13 @@
       error = "Please enter a full URL";
       return;
     }
-    const id = Math.random()
-      .toString(36)
-      .substr(2, 9);
+    if (id === null) {
+      id = Math.random()
+        .toString(36)
+        .substr(2, 9);
+    }
 
-    dispatch("addsheet", { id, title, composer, musicURL, previewURL });
+    dispatch("savesheet", { id, title, composer, musicURL, previewURL });
   }
 </script>
 
@@ -66,19 +69,32 @@
   input.error {
     border-color: #fe0505;
   }
-
 </style>
 
-<h4>Add a New Piece</h4>
+{#if id === null}
+  <h4>Add a New Piece</h4>
+{:else}
+  <h4>Edit {title}</h4>
+{/if}
 {#if error}
   <div class="error error-message">{error}</div>
 {/if}
 <label for="title" class:error={titleError}>Title</label>
-<input type="text" id="title" class="focus:shadow" bind:value={title} class:error={titleError} />
+<input
+  type="text"
+  id="title"
+  class="focus:shadow"
+  bind:value={title}
+  class:error={titleError} />
 <label for="composer">Composer</label>
 <input type="text" id="composer" class="focus:shadow" bind:value={composer} />
 <label for="musicURL" class:error={urlError}>URL to Music File</label>
-<input type="text" id="musicURL" class="focus:shadow" bind:value={musicURL} class:error={urlError} />
+<input
+  type="text"
+  id="musicURL"
+  class="focus:shadow"
+  bind:value={musicURL}
+  class:error={urlError} />
 <label for="previewURL">URL to Preview Image</label>
 <input
   type="text"
@@ -86,7 +102,7 @@
   class="focus:shadow"
   bind:value={previewURL} />
 <div class="dialog-buttons">
-  <button type="submit" class="hover:shadow" on:click={addSheet}>Save</button>
+  <button type="submit" class="hover:shadow" on:click={saveSheet}>Save</button>
   <button class="hover:shadow" on:click={() => dispatch('cancel')}>
     Cancel
   </button>
