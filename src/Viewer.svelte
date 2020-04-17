@@ -61,6 +61,7 @@
     top: 0;
     left: 0;
     z-index: -1;
+    width: 100%;
   }
 
   .loader-wrapper {
@@ -70,6 +71,24 @@
     padding-top: 2rem;
     padding-bottom: 10rem;
     background: #fff;
+  }
+
+  .scroll-button {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    background: #777;
+    appearance: none;
+    border: #555;
+    color: white;
+    padding: 0.5rem;
+    opacity: 0.9;
+    cursor: pointer;
+  }
+
+  .scroll-button:hover {
+    opacity: 1;
+    background: #555;
   }
 </style>
 
@@ -105,5 +124,8 @@
       <Loader />
     </div>
   {/if}
+  <button on:click={() => window.scrollBy(0, window.innerHeight * 0.8)} class="scroll-button shadow" title="scroll down">
+  <i class="material-icons">arrow_downward</i>
+  </button>
   <div id="sheet-viewer" />
 </main>
